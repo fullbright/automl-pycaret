@@ -1,5 +1,6 @@
 import os, ast
 import pandas as pd
+from utils import split_sets
 
 dataset = os.environ["INPUT_DATASET"]
 target = os.environ["INPUT_TARGET"]
@@ -30,7 +31,6 @@ def download_dataset():
     
     # for f in files:
     #     print(f)
-  
 
 dataset_path = os.environ["INPUT_DATASET"] # + '.csv'
 print("Dataset path 2 {}".format(dataset_path))
@@ -42,13 +42,7 @@ data_df = pd.read_csv(dataset)
 print(data_df.head())
 print(data_df.dtypes)
 
-# Spliting by training and test set
-# eighty_pct = 0.8*data_df.shape[0] 
-eighty_pct = split_percent * data_df.shape[0] 
-  
-trainset_df = data_df.loc[:eighty_pct-1, :] 
-testset_df = data_df.loc[eighty_pct:, :] 
-  
+trainset_df, testset_df = split_sets(data_df, split_percent)
 print("Training set shape = {}, test set shape = {}".format(trainset_df.shape, testset_df.shape))
 
 

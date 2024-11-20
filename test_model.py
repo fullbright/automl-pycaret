@@ -6,6 +6,8 @@ model = load_model("tuned_model")
 
 def predict_category(data_unseen):
 
+    print("Unseen data types = ", data_unseen.dtypes)
+
     prediction = predict_model(model, data=data_unseen)
     print(prediction.dtypes)
     print(prediction["prediction_label"])
@@ -13,8 +15,19 @@ def predict_category(data_unseen):
 
     return prediction
 
-data_df = pd.read_csv("banking_data_duplicated.csv")
-_, testset_df = split_sets(data_df)
+data1_df = pd.read_csv("banking_data_duplicated.csv")
+_, testset1_df = split_sets(data1_df)
+orig_dtypes = data1_df.dtypes
+print("Orig columns = ", data1_df.columns)
+
+data_df = pd.read_csv("banking_data_tovalidate.csv")
+testset_df = data_df
+print("New data columns = ", data_df.columns)
+
+for x in data1_df.columns:
+    print("Column = {}, type = {}".format(x, data1_df[x].dtypes.name))
+    data_df[x]=data_df[x].astype(data1_df[x].dtypes.name)
+
 
 data_columns=["Date","name","merchant","Montant","Categorie","Categorie2","Libellé","entree_sortie_argent","month","amount","year","fixeOuVariable","FournisseurClient","TransactionId","BudgetMontant","AnomalyAndComments","HasOverflowBudget"]
 data_1 = ["11/11/2024","Achat Ali express piltover","Compte De Dépôts - Sergio Afanou",72,"","",0,"sortie",11,72,2024,"variable","","ID-03254",0,"",0]
@@ -30,4 +43,4 @@ preds = predict_category(testset_df)
 testset_df['prediction_label'] = preds['prediction_label']
 testset_df['prediction_score'] = preds['prediction_score']
 
-print(testset_df[['category', 'prediction_label', 'prediction_score']])
+print(testset_df[['name', 'category', 'prediction_label', 'prediction_score']])

@@ -31,21 +31,13 @@ def download_dataset():
     # for f in files:
     #     print(f)
 
-
-def train_model(dataset_path, usecase, target, split_percent):
-
-    model_final_name = "tuned_model_{}_{}".format(usecase, target)
-
-    #data = pd.read_csv(dataset_path)
-    # data = pd.read_csv("banking_data.csv")
-    # data_df = pd.read_csv("banking_data_duplicated.csv")
-    data_df = pd.read_csv(dataset_path)
-    print(data_df.head())
+def update_dtypes(data_df):
     data_df['amount'] = data_df['amount'].apply(lambda x: x.replace(',','.'))
     data_df['amount'] = data_df['amount'].astype('float64')
-    data_df['Date'] = data_df['Date'].astype('float64')
-    data_df['name'] = data_df['name'].astype('float64')
-    data_df['merchant'] = data_df['merchant'].astype('float64')
+    # data_df['Date'] =  data_df['Date'].astype('datetime64[ns]')
+    data_df['Date'] =  pd.to_datetime(data_df['Date'], format="%d/%m/%Y") # df['TIME'] = pd.to_datetime(df['TIME'], format="%m/%d/%Y %I:%M:%S %p")
+    data_df['name'] = data_df['name'].astype('string')
+    data_df['merchant'] = data_df['merchant'].astype('string')
     data_df['Categorie'] = data_df['Categorie'].astype('string')
     data_df['Categorie2'] = data_df['Categorie2'].astype('string')
     data_df['Libellé'] = data_df['Libellé'].astype('float64')
@@ -56,6 +48,20 @@ def train_model(dataset_path, usecase, target, split_percent):
     data_df['category'] = data_df['category'].astype('string')
     data_df['BudgetMontant'] = data_df['BudgetMontant'].astype('float64')
     data_df['AnomalyAndComments'] = data_df['AnomalyAndComments'].astype('string')
+    return data_df
+
+
+def train_model(dataset_path, usecase, target, split_percent):
+
+    model_final_name = "tuned_model_{}_{}".format(usecase, target)
+
+    #data = pd.read_csv(dataset_path)
+    # data = pd.read_csv("banking_data.csv")
+    # data_df = pd.read_csv("banking_data_duplicated.csv")
+    data_df = pd.read_csv(dataset_path)
+    print(data_df.head())
+    
+    data_df = update_dtypes(data_df)
 
     print(data_df.dtypes)
 

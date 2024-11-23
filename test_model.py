@@ -1,8 +1,9 @@
 from pycaret.classification import *
 import pandas as pd
-from utils import split_sets
+from utils import split_sets, update_dtypes
 
-model = load_model("tuned_model")
+# model = load_model("tuned_model")
+model = load_model("tuned_model_classification_category_best_auc")
 
 def predict_category(data_unseen):
 
@@ -21,7 +22,7 @@ orig_dtypes = data1_df.dtypes
 print("Orig columns = ", data1_df.columns)
 
 data_df = pd.read_csv("banking_data_tovalidate.csv")
-testset_df = data_df
+testset_df = update_dtypes(data_df)
 print("New data columns = ", data_df.columns)
 
 for x in data1_df.columns:
